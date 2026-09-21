@@ -1,0 +1,954 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Aesthetic Iron - Hussein Farhat Hypertrophy Split</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&display=swap');
+    
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #0b0f19;
+      color: #f3f4f6;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+
+    .glass-card {
+      background: rgba(17, 24, 39, 0.75);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.07);
+    }
+
+    .neon-border {
+      border: 1px solid rgba(99, 102, 241, 0.3);
+      box-shadow: 0 0 15px rgba(99, 102, 241, 0.15);
+    }
+
+    .active-tab {
+      color: #6366f1;
+    }
+
+    .active-tab i {
+      transform: translateY(-2px);
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 4px;
+      height: 4px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #0f172a;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #334155;
+      border-radius: 4px;
+    }
+
+    /* Checkbox animation */
+    .set-check:checked + label {
+      background-color: #10b981;
+      border-color: #10b981;
+      color: #ffffff;
+    }
+
+    .tab-content {
+      display: none;
+    }
+    .tab-content.active {
+      display: block;
+    }
+  </style>
+</head>
+<body class="pb-24 pt-2 max-w-md mx-auto min-h-screen relative bg-slate-950 text-slate-100">
+
+  <!-- Header Section -->
+  <header class="px-4 py-3 flex justify-between items-center sticky top-0 z-30 bg-slate-950/90 backdrop-blur-md border-b border-slate-800/80">
+    <div class="flex items-center space-x-3">
+      <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-violet-500 flex items-center justify-center shadow-lg shadow-indigo-500/30">
+        <i class="fa-solid font-black text-xl text-white">HF</i>
+      </div>
+      <div>
+        <h1 class="text-base font-extrabold tracking-tight bg-gradient-to-r from-white via-slate-200 to-indigo-400 bg-clip-text text-transparent">
+          AESTHETIC IRON
+        </h1>
+        <p class="text-[10px] text-slate-400 font-medium">Hussein Farhat Split (LBS)</p>
+      </div>
+    </div>
+    
+    <div class="flex items-center space-x-2">
+      <!-- Active Workout Indicator / Timer -->
+      <div id="headerTimerWidget" class="hidden flex items-center bg-emerald-500/10 border border-emerald-500/30 px-2.5 py-1 rounded-full cursor-pointer" onclick="switchTab('workout')">
+        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse mr-2"></span>
+        <span id="activeTimerDisplay" class="text-xs font-mono font-bold text-emerald-400">00:00</span>
+      </div>
+      
+      <!-- Quick Rest Timer Trigger -->
+      <button onclick="openRestTimerModal()" class="w-9 h-9 rounded-xl bg-slate-800 border border-slate-700/60 flex items-center justify-center text-slate-300 hover:text-white hover:border-indigo-500/50 transition">
+        <i class="fa-solid fa-stopwatch text-sm"></i>
+      </button>
+    </div>
+  </header>
+
+  <!-- MAIN TAB CONTENT CONTAINER -->
+  <main class="px-4 pt-4 pb-6">
+
+    <!-- ================= TAB 1: WORKOUT (ACTIVE WORKOUT & SPLIT SELECTOR) ================= -->
+    <section id="tab-workout" class="tab-content active space-y-4">
+      
+      <!-- Active Workout Banner (If Session Active) -->
+      <div id="activeSessionBanner" class="hidden bg-gradient-to-r from-indigo-900/40 via-purple-900/30 to-slate-900 border border-indigo-500/40 rounded-2xl p-4 shadow-xl relative overflow-hidden">
+        <div class="flex justify-between items-start mb-2">
+          <div>
+            <span class="text-[10px] font-bold tracking-widest text-indigo-400 uppercase">Workout In Progress</span>
+            <h2 id="activeWorkoutTitle" class="text-lg font-bold text-white">Chest & Triceps Hypertrophy</h2>
+          </div>
+          <button onclick="cancelActiveWorkout()" class="text-xs font-semibold text-rose-400 hover:text-rose-300 bg-rose-500/10 border border-rose-500/20 px-2.5 py-1 rounded-lg">
+            Discard
+          </button>
+        </div>
+        <div class="flex items-center justify-between mt-3 text-xs text-slate-300">
+          <div class="flex items-center space-x-2">
+            <i class="fa-regular fa-clock text-indigo-400"></i>
+            <span id="activeSessionTimer" class="font-mono font-bold text-white">00:00:00</span>
+          </div>
+          <div class="flex items-center space-x-2">
+            <i class="fa-solid fa-dumbbell text-indigo-400"></i>
+            <span id="activeSessionVolume">0 lbs</span>
+          </div>
+        </div>
+        <button onclick="finishActiveWorkout()" class="w-full mt-3 py-2.5 bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-extrabold text-sm rounded-xl shadow-lg shadow-emerald-500/20 transition flex items-center justify-center space-x-2">
+          <i class="fa-solid fa-circle-check"></i>
+          <span>Finish Workout</span>
+        </button>
+      </div>
+
+      <!-- Split Selector Title -->
+      <div class="flex justify-between items-center">
+        <h2 class="text-sm font-bold text-slate-400 uppercase tracking-wider">5-Day Hypertrophy Routine</h2>
+        <span class="text-xs text-indigo-400 font-semibold">Weight in LBS</span>
+      </div>
+
+      <!-- Routine Cards List -->
+      <div id="routineList" class="space-y-3">
+        <!-- JS Dynamic Injection -->
+      </div>
+
+      <!-- Active Exercise Logging View (Visible when starting/editing a workout) -->
+      <div id="workoutLoggerView" class="hidden space-y-4 pt-2">
+        <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+          <button onclick="showRoutineSelector()" class="text-xs text-slate-400 flex items-center space-x-1 hover:text-white">
+            <i class="fa-solid fa-arrow-left"></i>
+            <span>Back to Routines</span>
+          </button>
+          <span id="loggerSplitName" class="text-xs font-bold text-indigo-400 uppercase tracking-wider">Chest & Triceps</span>
+        </div>
+
+        <!-- Exercises List with Rep targets & lbs -->
+        <div id="loggerExercisesContainer" class="space-y-4">
+          <!-- Dynamic Exercise Cards injected via JS -->
+        </div>
+
+        <button onclick="finishActiveWorkout()" class="w-full py-3.5 bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-black text-sm rounded-2xl shadow-xl shadow-emerald-500/25 transition flex items-center justify-center space-x-2 uppercase tracking-wide">
+          <i class="fa-solid fa-check-double text-base"></i>
+          <span>Complete Workout Session</span>
+        </button>
+      </div>
+
+    </section>
+
+
+    <!-- ================= TAB 2: EXERCISES & VIDEO GUIDES ================= -->
+    <section id="tab-exercises" class="tab-content space-y-4">
+      <div class="flex justify-between items-center">
+        <div>
+          <h2 class="text-lg font-extrabold text-white">Exercise Video Library</h2>
+          <p class="text-xs text-slate-400">Hussein Farhat form & execution cues</p>
+        </div>
+      </div>
+
+      <!-- Search Input -->
+      <div class="relative">
+        <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3.5 text-slate-500 text-xs"></i>
+        <input type="text" id="exerciseSearchInput" onkeyup="filterExerciseLibrary()" placeholder="Search exercise or muscle..." class="w-full pl-9 pr-4 py-2.5 bg-slate-900 border border-slate-800 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500">
+      </div>
+
+      <!-- Video Exercise List -->
+      <div id="exerciseLibraryList" class="space-y-3">
+        <!-- Injected via JS -->
+      </div>
+    </section>
+
+
+    <!-- ================= TAB 3: HISTORY & LOGS ================= -->
+    <section id="tab-history" class="tab-content space-y-4">
+      <div class="flex justify-between items-center">
+        <div>
+          <h2 class="text-lg font-extrabold text-white">Workout History</h2>
+          <p class="text-xs text-slate-400">Track past sessions & delete accidental logs</p>
+        </div>
+        <button onclick="confirmClearAllHistory()" class="text-xs text-rose-400 bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/20 px-2.5 py-1 rounded-lg">
+          Clear All
+        </button>
+      </div>
+
+      <!-- Stats Summary Row -->
+      <div class="grid grid-cols-2 gap-3">
+        <div class="glass-card p-3 rounded-2xl border border-slate-800">
+          <span class="text-[10px] text-slate-400 uppercase font-semibold">Total Completed</span>
+          <div id="historyTotalCount" class="text-xl font-extrabold text-indigo-400 mt-1">0 Workouts</div>
+        </div>
+        <div class="glass-card p-3 rounded-2xl border border-slate-800">
+          <span class="text-[10px] text-slate-400 uppercase font-semibold">Total Volume</span>
+          <div id="historyTotalVolume" class="text-xl font-extrabold text-emerald-400 mt-1">0 lbs</div>
+        </div>
+      </div>
+
+      <!-- History Feed -->
+      <div id="historyLogsContainer" class="space-y-3">
+        <!-- Injected dynamically -->
+      </div>
+    </section>
+
+
+    <!-- ================= TAB 4: TOOLS (1RM, PLATE CALCULATOR, TIMER) ================= -->
+    <section id="tab-tools" class="tab-content space-y-4">
+      <h2 class="text-lg font-extrabold text-white">Lifting Utilities</h2>
+
+      <!-- 1RM Calculator Card -->
+      <div class="glass-card p-4 rounded-2xl border border-slate-800 space-y-3">
+        <div class="flex items-center space-x-2">
+          <i class="fa-solid fa-calculator text-indigo-400 text-base"></i>
+          <h3 class="text-sm font-bold text-white">One Rep Max (1RM) Estimator</h3>
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="text-[10px] text-slate-400 block mb-1">Weight (lbs)</label>
+            <input type="number" id="rmWeight" placeholder="225" value="185" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2 text-xs text-white focus:border-indigo-500 focus:outline-none">
+          </div>
+          <div>
+            <label class="text-[10px] text-slate-400 block mb-1">Reps Performed</label>
+            <input type="number" id="rmReps" placeholder="5" value="8" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2 text-xs text-white focus:border-indigo-500 focus:outline-none">
+          </div>
+        </div>
+        <button onclick="calculate1RM()" class="w-full py-2 bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs rounded-xl transition">
+          Calculate 1RM
+        </button>
+        <div id="rmResult" class="hidden p-3 bg-indigo-950/40 border border-indigo-500/30 rounded-xl text-center">
+          <span class="text-[10px] text-indigo-300 block">Estimated 1RM</span>
+          <span id="rmVal" class="text-2xl font-black text-indigo-400">234 lbs</span>
+        </div>
+      </div>
+
+      <!-- Imperial Plate Loader Card -->
+      <div class="glass-card p-4 rounded-2xl border border-slate-800 space-y-3">
+        <div class="flex items-center space-x-2">
+          <i class="fa-solid fa-layer-group text-emerald-400 text-base"></i>
+          <h3 class="text-sm font-bold text-white">Imperial Plate Loader (Per Side)</h3>
+        </div>
+        <p class="text-xs text-slate-400">Includes standard 45 lbs Olympic barbell weight.</p>
+        <div>
+          <label class="text-[10px] text-slate-400 block mb-1">Target Barbell Weight (lbs)</label>
+          <input type="number" id="plateTargetWeight" placeholder="225" value="225" oninput="calculatePlates()" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-xs text-white focus:border-emerald-500 focus:outline-none">
+        </div>
+        <div id="platesDisplay" class="p-3 bg-slate-900/80 border border-slate-800 rounded-xl flex flex-wrap gap-2 items-center justify-center">
+          <!-- Plate badges injected JS -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= TAB 5: PROFILE & CODE VIEWER ================= -->
+    <section id="tab-profile" class="tab-content space-y-4">
+      <h2 class="text-lg font-extrabold text-white">Profile & App Source</h2>
+
+      <div class="glass-card p-4 rounded-2xl border border-slate-800 text-center space-y-3">
+        <div class="w-16 h-16 rounded-full bg-indigo-600/30 border-2 border-indigo-500 mx-auto flex items-center justify-center">
+          <i class="fa-solid fa-user-ninja text-2xl text-indigo-400"></i>
+        </div>
+        <div>
+          <h3 class="text-base font-bold text-white">Aesthetic Lifter</h3>
+          <p class="text-xs text-slate-400">Hussein Farhat Hypertrophy Protocol</p>
+        </div>
+        <div class="inline-block bg-indigo-500/10 border border-indigo-500/30 px-3 py-1 rounded-full text-xs text-indigo-400 font-semibold">
+          Units: Standard Imperial (lbs)
+        </div>
+      </div>
+
+      <!-- Code Inspector Trigger Card -->
+      <div class="glass-card p-4 rounded-2xl border border-indigo-500/30 bg-indigo-950/20 space-y-3">
+        <div class="flex items-center space-x-3">
+          <div class="w-10 h-10 rounded-xl bg-indigo-600/20 border border-indigo-500/40 flex items-center justify-center text-indigo-400">
+            <i class="fa-solid fa-code text-lg"></i>
+          </div>
+          <div>
+            <h3 class="text-sm font-bold text-white">App Source Code Viewer</h3>
+            <p class="text-xs text-slate-400">Inspect & copy full HTML, CSS, JS</p>
+          </div>
+        </div>
+        <button onclick="openCodeModal()" class="w-full py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs rounded-xl shadow-lg shadow-indigo-600/20 transition flex items-center justify-center space-x-2">
+          <i class="fa-solid fa-terminal"></i>
+          <span>Open Full Source Code</span>
+        </button>
+      </div>
+    </section>
+
+  </main>
+
+
+  <!-- ================= BOTTOM NAVIGATION TABS ================= -->
+  <nav class="fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-slate-950/95 border-t border-slate-800/80 backdrop-blur-xl z-40 px-3 py-2">
+    <div class="grid grid-cols-5 gap-1 text-center">
+      
+      <button onclick="switchTab('workout')" id="nav-workout" class="active-tab flex flex-col items-center py-1 text-slate-400 hover:text-white transition">
+        <i class="fa-solid fa-dumbbell text-lg mb-1"></i>
+        <span class="text-[10px] font-semibold">Workout</span>
+      </button>
+
+      <button onclick="switchTab('exercises')" id="nav-exercises" class="flex flex-col items-center py-1 text-slate-400 hover:text-white transition">
+        <i class="fa-solid fa-circle-play text-lg mb-1"></i>
+        <span class="text-[10px] font-semibold">Videos</span>
+      </button>
+
+      <button onclick="switchTab('history')" id="nav-history" class="flex flex-col items-center py-1 text-slate-400 hover:text-white transition">
+        <i class="fa-solid fa-clock-rotate-left text-lg mb-1"></i>
+        <span class="text-[10px] font-semibold">History</span>
+      </button>
+
+      <button onclick="switchTab('tools')" id="nav-tools" class="flex flex-col items-center py-1 text-slate-400 hover:text-white transition">
+        <i class="fa-solid fa-calculator text-lg mb-1"></i>
+        <span class="text-[10px] font-semibold">Tools</span>
+      </button>
+
+      <button onclick="switchTab('profile')" id="nav-profile" class="flex flex-col items-center py-1 text-slate-400 hover:text-white transition">
+        <i class="fa-solid fa-code text-lg mb-1"></i>
+        <span class="text-[10px] font-semibold">Code</span>
+      </button>
+
+    </div>
+  </nav>
+
+
+  <!-- ================= VIDEO DEMO MODAL ================= -->
+  <div id="videoModal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-sm overflow-hidden shadow-2xl relative space-y-3 p-4">
+      <div class="flex justify-between items-center">
+        <h3 id="modalVideoTitle" class="text-sm font-bold text-white truncate pr-2">Exercise Video Tutorial</h3>
+        <button onclick="closeVideoModal()" class="w-7 h-7 rounded-full bg-slate-800 text-slate-400 hover:text-white flex items-center justify-center">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <!-- Embedded Iframe with Fallback Banner -->
+      <div class="relative w-full aspect-video bg-black rounded-xl overflow-hidden border border-slate-800 flex items-center justify-center">
+        <iframe id="videoIframe" class="w-full h-full" src="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      </div>
+
+      <div class="space-y-2">
+        <p class="text-[11px] text-slate-400 leading-relaxed" id="modalVideoCues">
+          Controlled 3-second eccentric phase. Keep tension on the target muscle throughout the full range of motion.
+        </p>
+        <a id="modalExternalYT" href="#" target="_blank" class="w-full py-2 bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs rounded-xl flex items-center justify-center space-x-2 transition">
+          <i class="fa-brands fa-youtube text-base"></i>
+          <span>Watch direct on YouTube (@Hussein.fht1)</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ================= REST TIMER MODAL ================= -->
+  <div id="restTimerModal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-xs p-5 text-center space-y-4 shadow-2xl">
+      <div class="flex justify-between items-center">
+        <span class="text-xs font-bold text-indigo-400 uppercase tracking-wider">Rest Timer</span>
+        <button onclick="closeRestTimerModal()" class="text-slate-400 hover:text-white">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div class="text-4xl font-mono font-black text-white py-2" id="restTimerDisplay">01:30</div>
+
+      <div class="grid grid-cols-3 gap-2">
+        <button onclick="setRestTimer(60)" class="py-2 bg-slate-800 hover:bg-indigo-600/30 border border-slate-700 text-xs font-bold text-slate-200 rounded-xl">60s</button>
+        <button onclick="setRestTimer(90)" class="py-2 bg-slate-800 hover:bg-indigo-600/30 border border-slate-700 text-xs font-bold text-slate-200 rounded-xl">90s</button>
+        <button onclick="setRestTimer(120)" class="py-2 bg-slate-800 hover:bg-indigo-600/30 border border-slate-700 text-xs font-bold text-slate-200 rounded-xl">120s</button>
+      </div>
+
+      <div class="flex space-x-2 pt-2">
+        <button onclick="toggleRestTimer()" id="restTimerBtn" class="flex-1 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs rounded-xl">
+          Start Timer
+        </button>
+        <button onclick="resetRestTimer()" class="px-3 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-xs rounded-xl">
+          Reset
+        </button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ================= SOURCE CODE MODAL ================= -->
+  <div id="codeModal" class="fixed inset-0 bg-black/90 backdrop-blur-lg z-50 hidden flex flex-col p-4">
+    <div class="flex justify-between items-center mb-3">
+      <div>
+        <h3 class="text-sm font-bold text-white">Application Codebase</h3>
+        <p class="text-[11px] text-slate-400">Full source code for single-file HTML/CSS/JS</p>
+      </div>
+      <div class="flex items-center space-x-2">
+        <button onclick="copySourceCode()" class="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold rounded-lg flex items-center space-x-1.5">
+          <i class="fa-regular fa-copy"></i>
+          <span id="copyBtnText">Copy Code</span>
+        </button>
+        <button onclick="closeCodeModal()" class="w-8 h-8 rounded-full bg-slate-800 text-slate-400 hover:text-white flex items-center justify-center">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+    </div>
+    <div class="flex-1 bg-slate-900 border border-slate-800 rounded-xl p-3 overflow-hidden flex flex-col">
+      <textarea id="sourceCodeTextArea" readonly class="w-full h-full bg-transparent text-[11px] font-mono text-emerald-400 focus:outline-none resize-none border-none leading-relaxed"></textarea>
+    </div>
+  </div>
+
+
+  <!-- JavaScript Application Engine -->
+  <script>
+    // -------------------------------------------------------------
+    // 1. DATA STRUCTURE: 5-DAY HYPERTROPHY ROUTINE (HUSSEIN FARHAT)
+    // -------------------------------------------------------------
+    const workoutRoutines = [
+      {
+        id: "day1",
+        title: "Day 1: Chest & Triceps",
+        subtitle: "Upper Body Push Focus",
+        exercises: [
+          { name: "Incline Dumbbell Press", targetSets: 4, recReps: "8 - 10 reps", defaultWeight: 70, videoId: "8iPEnn-ltC8", cues: "3-second negative. Squeeze chest at peak contraction without locking out hard." },
+          { name: "Flat Barbell Bench Press", targetSets: 3, recReps: "6 - 8 reps", defaultWeight: 175, videoId: "rT7DgCr-3pg", cues: "Retract scapula, keep feet planted, explode up." },
+          { name: "Cable Chest Flyes", targetSets: 3, recReps: "12 - 15 reps", defaultWeight: 35, videoId: "Iwe6AmxVf7o", cues: "Slight bend in elbows, hug a tree motion, full stretch." },
+          { name: "Overhead Rope Tricep Ext.", targetSets: 4, recReps: "10 - 12 reps", defaultWeight: 50, videoId: "1u18yJFLA80", cues: "Keep elbows flared forward, stretch triceps at the bottom." },
+          { name: "Tricep Dips (Weighted)", targetSets: 3, recReps: "8 - 12 reps", defaultWeight: 25, videoId: "2z8JmcrW-As", cues: "Lean slightly forward to engage lower chest & tricep head." }
+        ]
+      },
+      {
+        id: "day2",
+        title: "Day 2: Back & Biceps",
+        subtitle: "Upper Body Pull Focus",
+        exercises: [
+          { name: "Lat Pulldown (Neutral Grip)", targetSets: 4, recReps: "10 - 12 reps", defaultWeight: 140, videoId: "CAwf7n6Luuc", cues: "Drive with elbows down into your hip pockets. Full stretch at top." },
+          { name: "Barbell Bent-Over Row", targetSets: 3, recReps: "8 - 10 reps", defaultWeight: 135, videoId: "FWJR5Ve8l3Q", cues: "45-degree torso angle, pull bar towards belly button." },
+          { name: "Seated Cable Row", targetSets: 3, recReps: "10 - 12 reps", defaultWeight: 130, videoId: "GZbfZ033fBo", cues: "Keep spine neutral, pause 1 second at chest touch." },
+          { name: "Incline DB Bicep Curls", targetSets: 4, recReps: "10 - 12 reps", defaultWeight: 30, videoId: "soxrZlIl35U", cues: "Incline bench lets arms hang back for maximum biceps stretch." },
+          { name: "Hammer Curls (Rope / DB)", targetSets: 3, recReps: "12 - 15 reps", defaultWeight: 35, videoId: "zC3nLlEvin4", cues: "Targets brachialis and forearms. Strict form, no swinging." }
+        ]
+      },
+      {
+        id: "day3",
+        title: "Day 3: Legs & Calves",
+        subtitle: "Lower Body Hypertrophy",
+        exercises: [
+          { name: "Barbell Back Squats", targetSets: 4, recReps: "6 - 8 reps", defaultWeight: 225, videoId: "ultWZbUMPL8", cues: "Break at hips and knees simultaneously. Depth below parallel." },
+          { name: "Romanian Deadlifts (RDL)", targetSets: 4, recReps: "8 - 10 reps", defaultWeight: 185, videoId: "JCXUYuzwnrM", cues: "Hinge at hips, slight knee bend, stretch hamstrings fully." },
+          { name: "Leg Extensions", targetSets: 3, recReps: "12 - 15 reps", defaultWeight: 120, videoId: "YyvSfVjQeL0", cues: "Hold top contraction for 1 full second." },
+          { name: "Seated Leg Curls", targetSets: 3, recReps: "12 - 15 reps", defaultWeight: 110, videoId: "1Tq3QdYUuHs", cues: "Control the eccentric phase on the return." },
+          { name: "Standing Calf Raises", targetSets: 4, recReps: "15 - 20 reps", defaultWeight: 150, videoId: "ym_aA0A3j84", cues: "Pause at bottom stretch for 2s to eliminate elastic recoil." }
+        ]
+      },
+      {
+        id: "day4",
+        title: "Day 4: Shoulders & Abs",
+        subtitle: "Deltoid & Core Focus",
+        exercises: [
+          { name: "Seated Dumbbell Shoulder Press", targetSets: 4, recReps: "8 - 10 reps", defaultWeight: 55, videoId: "qEwKCR5JCog", cues: "Elbows tucked slightly forward in the scapular plane." },
+          { name: "Cable Lateral Raises", targetSets: 4, recReps: "12 - 15 reps", defaultWeight: 20, videoId: "PPrzBWZDOhA", cues: "Lead with elbows, constant tension on side delt." },
+          { name: "Reverse Pec Deck Flyes", targetSets: 3, recReps: "15 - 20 reps", defaultWeight: 85, videoId: "ttvfGg9d0pE", cues: "Isolate rear delts without pinching shoulder blades together." },
+          { name: "Hanging Leg Raises", targetSets: 3, recReps: "12 - 15 reps", defaultWeight: 0, videoId: "prhGjU8GQf4", cues: "Curl pelvis upwards, do not swing." }
+        ]
+      },
+      {
+        id: "day5",
+        title: "Day 5: Upper Body Hypertrophy",
+        subtitle: "Pump & Weak Point Focus",
+        exercises: [
+          { name: "Incline Smith Press", targetSets: 4, recReps: "8 - 10 reps", defaultWeight: 155, videoId: "8iPEnn-ltC8", cues: "Controlled negative, constant upper chest tension." },
+          { name: "Single-Arm Cable Lat Row", targetSets: 3, recReps: "10 - 12 reps", defaultWeight: 60, videoId: "GZbfZ033fBo", cues: "Focus on unilateral lat squeeze." },
+          { name: "Cable Tricep Pushdowns", targetSets: 4, recReps: "12 - 15 reps", defaultWeight: 65, videoId: "1u18yJFLA80", cues: "Pin elbows to side, flare rope outward at bottom." },
+          { name: "EZ-Bar Preacher Curls", targetSets: 4, recReps: "10 - 12 reps", defaultWeight: 65, videoId: "soxrZlIl35U", cues: "Isolate bicep peak on preacher pad." }
+        ]
+      }
+    ];
+
+    // App State Variables
+    let activeWorkout = JSON.parse(localStorage.getItem("active_workout_lbs") || "null");
+    let workoutHistory = JSON.parse(localStorage.getItem("workout_history_lbs") || "[]");
+    let sessionTimerInterval = null;
+    let restTimerInterval = null;
+    let restTimerTime = 90;
+    let isRestTimerRunning = false;
+
+    // Initialize App on Page Load
+    window.addEventListener("DOMContentLoaded", () => {
+      renderRoutinesList();
+      renderExerciseLibrary();
+      renderHistory();
+      calculatePlates();
+      if (activeWorkout) {
+        resumeActiveWorkoutSession();
+      }
+    });
+
+    // -------------------------------------------------------------
+    // 2. TAB NAVIGATION SYSTEM
+    // -------------------------------------------------------------
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('nav button').forEach(el => {
+        el.classList.remove('active-tab');
+        el.classList.add('text-slate-400');
+      });
+
+      const activeSection = document.getElementById(`tab-${tabId}`);
+      if (activeSection) activeSection.classList.add('active');
+
+      const activeNavBtn = document.getElementById(`nav-${tabId}`);
+      if (activeNavBtn) {
+        activeNavBtn.classList.add('active-tab');
+        activeNavBtn.classList.remove('text-slate-400');
+      }
+    }
+
+    // -------------------------------------------------------------
+    // 3. WORKOUT ROUTINE & LOGGING ENGINE
+    // -------------------------------------------------------------
+    function renderRoutinesList() {
+      const container = document.getElementById('routineList');
+      container.innerHTML = workoutRoutines.map(routine => `
+        <div class="glass-card p-4 rounded-2xl border border-slate-800 hover:border-indigo-500/40 transition">
+          <div class="flex justify-between items-start mb-2">
+            <div>
+              <h3 class="text-sm font-bold text-white">${routine.title}</h3>
+              <p class="text-xs text-slate-400">${routine.subtitle}</p>
+            </div>
+            <span class="text-[10px] bg-indigo-500/10 border border-indigo-500/20 text-indigo-300 font-semibold px-2 py-0.5 rounded-full">
+              ${routine.exercises.length} Exercises
+            </span>
+          </div>
+          <p class="text-xs text-slate-400 mb-3 line-clamp-1">
+            ${routine.exercises.map(e => e.name).join(', ')}
+          </p>
+          <button onclick="startNewWorkout('${routine.id}')" class="w-full py-2 bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs rounded-xl shadow-md transition flex items-center justify-center space-x-1.5">
+            <i class="fa-solid fa-play text-[10px]"></i>
+            <span>Start Routine</span>
+          </button>
+        </div>
+      `).join('');
+    }
+
+    function startNewWorkout(routineId) {
+      const routine = workoutRoutines.find(r => r.id === routineId);
+      if (!routine) return;
+
+      activeWorkout = {
+        routineId: routine.id,
+        title: routine.title,
+        startTime: Date.now(),
+        exercises: routine.exercises.map(ex => {
+          const setsArr = [];
+          for (let i = 1; i <= ex.targetSets; i++) {
+            setsArr.push({ setNum: i, weight: ex.defaultWeight, reps: parseInt(ex.recReps.split('-')[0]) || 10, done: false });
+          }
+          return { name: ex.name, targetSets: ex.targetSets, recReps: ex.recReps, cues: ex.cues, videoId: ex.videoId, sets: setsArr };
+        })
+      };
+
+      saveActiveWorkoutState();
+      resumeActiveWorkoutSession();
+    }
+
+    function resumeActiveWorkoutSession() {
+      document.getElementById('routineList').classList.add('hidden');
+      document.getElementById('workoutLoggerView').classList.remove('hidden');
+      document.getElementById('activeSessionBanner').classList.remove('hidden');
+      document.getElementById('headerTimerWidget').classList.remove('hidden');
+      document.getElementById('headerTimerWidget').classList.add('flex');
+      document.getElementById('activeWorkoutTitle').innerText = activeWorkout.title;
+      document.getElementById('loggerSplitName').innerText = activeWorkout.title;
+
+      startSessionTimer();
+      renderActiveWorkoutExercises();
+    }
+
+    function showRoutineSelector() {
+      document.getElementById('workoutLoggerView').classList.add('hidden');
+      document.getElementById('routineList').classList.remove('hidden');
+    }
+
+    function renderActiveWorkoutExercises() {
+      const container = document.getElementById('loggerExercisesContainer');
+      container.innerHTML = activeWorkout.exercises.map((ex, exIdx) => `
+        <div class="glass-card p-4 rounded-2xl border border-slate-800 space-y-3">
+          <div class="flex justify-between items-start">
+            <div>
+              <h4 class="text-xs font-extrabold text-white">${ex.name}</h4>
+              <div class="flex items-center space-x-2 text-[10px] text-indigo-400 font-semibold mt-0.5">
+                <span>Target: ${ex.targetSets} sets</span>
+                <span>•</span>
+                <span class="text-emerald-400">Rec: ${ex.recReps}</span>
+              </div>
+            </div>
+            <button onclick="openVideoModal('${ex.name}', '${ex.videoId}', '${ex.cues}')" class="text-xs text-indigo-400 hover:text-indigo-300 flex items-center space-x-1 bg-indigo-500/10 px-2 py-1 rounded-lg border border-indigo-500/20">
+              <i class="fa-solid fa-circle-play"></i>
+              <span>Guide</span>
+            </button>
+          </div>
+
+          <!-- Sets Header -->
+          <div class="grid grid-cols-12 gap-1 text-[10px] font-bold text-slate-400 uppercase text-center border-b border-slate-800 pb-1">
+            <span class="col-span-2">Set</span>
+            <span class="col-span-4">LBS</span>
+            <span class="col-span-4">Reps</span>
+            <span class="col-span-2">Done</span>
+          </div>
+
+          <!-- Sets List -->
+          <div class="space-y-1.5">
+            ${ex.sets.map((st, setIdx) => `
+              <div class="grid grid-cols-12 gap-1 items-center text-center">
+                <span class="col-span-2 text-xs font-mono font-bold text-slate-400">${st.setNum}</span>
+                <input type="number" value="${st.weight}" onchange="updateSetVal(${exIdx},${setIdx}, 'weight', this.value)" class="col-span-4 bg-slate-900 border border-slate-800 rounded-lg p-1.5 text-xs text-center font-semibold text-white focus:border-indigo-500 focus:outline-none">
+                <input type="number" value="${st.reps}" onchange="updateSetVal(${exIdx},${setIdx}, 'reps', this.value)" class="col-span-4 bg-slate-900 border border-slate-800 rounded-lg p-1.5 text-xs text-center font-semibold text-white focus:border-indigo-500 focus:outline-none">
+                <div class="col-span-2 flex justify-center">
+                  <input type="checkbox" id="check-${exIdx}-${setIdx}" ${st.done ? 'checked' : ''} onchange="toggleSetDone(${exIdx},${setIdx})" class="hidden set-check">
+                  <label for="check-${exIdx}-${setIdx}" class="w-6 h-6 rounded-lg bg-slate-800 border border-slate-700 flex items-center justify-center text-xs text-transparent cursor-pointer transition">
+                    <i class="fa-solid fa-check text-[10px]"></i>
+                  </label>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+
+          <div class="flex space-x-2 pt-1">
+            <button onclick="addSetToExercise(${exIdx})" class="flex-1 py-1.5 bg-slate-800/80 hover:bg-slate-800 border border-slate-700/60 rounded-xl text-[11px] font-semibold text-slate-300">
+              + Add Set
+            </button>
+            <button onclick="removeSetFromExercise(${exIdx})" class="px-3 py-1.5 bg-rose-500/10 border border-rose-500/20 hover:bg-rose-500/20 rounded-xl text-[11px] font-semibold text-rose-400">
+              - Remove Set
+            </button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function updateSetVal(exIdx, setIdx, field, value) {
+      if (!activeWorkout) return;
+      activeWorkout.exercises[exIdx].sets[setIdx][field] = parseFloat(value) || 0;
+      saveActiveWorkoutState();
+      calculateActiveVolume();
+    }
+
+    function toggleSetDone(exIdx, setIdx) {
+      if (!activeWorkout) return;
+      activeWorkout.exercises[exIdx].sets[setIdx].done = !activeWorkout.exercises[exIdx].sets[setIdx].done;
+      saveActiveWorkoutState();
+      calculateActiveVolume();
+      if (activeWorkout.exercises[exIdx].sets[setIdx].done) {
+        openRestTimerModal();
+      }
+    }
+
+    function addSetToExercise(exIdx) {
+      if (!activeWorkout) return;
+      const sets = activeWorkout.exercises[exIdx].sets;
+      const lastSet = sets[sets.length - 1] || { weight: 100, reps: 10 };
+      sets.push({ setNum: sets.length + 1, weight: lastSet.weight, reps: lastSet.reps, done: false });
+      saveActiveWorkoutState();
+      renderActiveWorkoutExercises();
+    }
+
+    function removeSetFromExercise(exIdx) {
+      if (!activeWorkout || activeWorkout.exercises[exIdx].sets.length <= 1) return;
+      activeWorkout.exercises[exIdx].sets.pop();
+      saveActiveWorkoutState();
+      renderActiveWorkoutExercises();
+    }
+
+    function saveActiveWorkoutState() {
+      localStorage.setItem("active_workout_lbs", JSON.stringify(activeWorkout));
+    }
+
+    function calculateActiveVolume() {
+      if (!activeWorkout) return 0;
+      let vol = 0;
+      activeWorkout.exercises.forEach(ex => {
+        ex.sets.forEach(st => {
+          if (st.done) vol += (st.weight * st.reps);
+        });
+      });
+      document.getElementById('activeSessionVolume').innerText = `${vol.toLocaleString()} lbs`;
+      return vol;
+    }
+
+    function startSessionTimer() {
+      if (sessionTimerInterval) clearInterval(sessionTimerInterval);
+      sessionTimerInterval = setInterval(() => {
+        if (!activeWorkout) return;
+        const elapsedSec = Math.floor((Date.now() - activeWorkout.startTime) / 1000);
+        const hrs = Math.floor(elapsedSec / 3600);
+        const mins = Math.floor((elapsedSec % 3600) / 60);
+        const secs = elapsedSec % 60;
+        
+        const formatted = `${hrs > 0 ? String(hrs).padStart(2, '0') + ':' : ''}${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+        document.getElementById('activeSessionTimer').innerText = formatted;
+        document.getElementById('activeTimerDisplay').innerText = formatted;
+      }, 1000);
+    }
+
+    function finishActiveWorkout() {
+      if (!activeWorkout) return;
+      const completedVolume = calculateActiveVolume();
+      const elapsedSec = Math.floor((Date.now() - activeWorkout.startTime) / 1000);
+
+      const logItem = {
+        id: "log_" + Date.now(),
+        title: activeWorkout.title,
+        date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+        durationSec: elapsedSec,
+        totalVolumeLbs: completedVolume,
+        exercises: activeWorkout.exercises
+      };
+
+      workoutHistory.unshift(logItem);
+      localStorage.setItem("workout_history_lbs", JSON.stringify(workoutHistory));
+
+      cancelActiveWorkout();
+      renderHistory();
+      switchTab('history');
+    }
+
+    function cancelActiveWorkout() {
+      activeWorkout = null;
+      localStorage.removeItem("active_workout_lbs");
+      if (sessionTimerInterval) clearInterval(sessionTimerInterval);
+
+      document.getElementById('activeSessionBanner').classList.add('hidden');
+      document.getElementById('headerTimerWidget').classList.add('hidden');
+      document.getElementById('workoutLoggerView').classList.add('hidden');
+      document.getElementById('routineList').classList.remove('hidden');
+    }
+
+
+    // -------------------------------------------------------------
+    // 4. HISTORY & DELETION ENGINE
+    // -------------------------------------------------------------
+    function renderHistory() {
+      const container = document.getElementById('historyLogsContainer');
+      document.getElementById('historyTotalCount').innerText = `${workoutHistory.length} Sessions`;
+
+      const grandTotalVol = workoutHistory.reduce((acc, curr) => acc + (curr.totalVolumeLbs || 0), 0);
+      document.getElementById('historyTotalVolume').innerText = `${grandTotalVol.toLocaleString()} lbs`;
+
+      if (workoutHistory.length === 0) {
+        container.innerHTML = `
+          <div class="glass-card p-6 rounded-2xl text-center space-y-2 border border-slate-800">
+            <i class="fa-solid fa-dumbbell text-3xl text-slate-600"></i>
+            <p class="text-xs text-slate-400">No recorded workouts yet.</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = workoutHistory.map(log => {
+        const mins = Math.floor(log.durationSec / 60);
+        return `
+          <div class="glass-card p-4 rounded-2xl border border-slate-800 space-y-3">
+            <div class="flex justify-between items-start">
+              <div>
+                <h3 class="text-sm font-bold text-white">${log.title}</h3>
+                <p class="text-[10px] text-slate-400">${log.date} • ${mins} mins</p>
+              </div>
+              <button onclick="deleteHistoryLog('${log.id}')" class="text-xs text-rose-400 hover:text-rose-300 p-1.5 bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/20 rounded-lg transition" title="Delete Log">
+                <i class="fa-regular fa-trash-can"></i>
+              </button>
+            </div>
+            
+            <div class="bg-slate-900/60 p-2.5 rounded-xl border border-slate-800/80 space-y-1">
+              ${log.exercises.map(e => `
+                <div class="flex justify-between items-center text-xs text-slate-300">
+                  <span class="truncate max-w-[200px] font-medium">${e.name}</span>
+                  <span class="text-[10px] font-mono text-slate-400">${e.sets.filter(s=>s.done).length} sets done</span>
+                </div>
+              `).join('')}
+            </div>
+
+            <div class="flex justify-between items-center text-[10px] text-slate-400 pt-1 border-t border-slate-800/80">
+              <span>Total Session Volume:</span>
+              <span class="font-bold font-mono text-emerald-400 text-xs">${log.totalVolumeLbs.toLocaleString()} lbs</span>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function deleteHistoryLog(logId) {
+      if (confirm("Delete this workout entry from your history?")) {
+        workoutHistory = workoutHistory.filter(item => item.id !== logId);
+        localStorage.setItem("workout_history_lbs", JSON.stringify(workoutHistory));
+        renderHistory();
+      }
+    }
+
+    function confirmClearAllHistory() {
+      if (confirm("Are you sure you want to clear your entire workout history? This cannot be undone.")) {
+        workoutHistory = [];
+        localStorage.removeItem("workout_history_lbs");
+        renderHistory();
+      }
+    }
+
+
+    // -------------------------------------------------------------
+    // 5. EXERCISE LIBRARY & VIDEO MODAL ENGINE
+    // -------------------------------------------------------------
+    function renderExerciseLibrary() {
+      const container = document.getElementById('exerciseLibraryList');
+      const allExercises = [];
+      workoutRoutines.forEach(r => {
+        r.exercises.forEach(ex => {
+          if (!allExercises.some(e => e.name === ex.name)) {
+            allExercises.push(ex);
+          }
+        });
+      });
+
+      container.innerHTML = allExercises.map(ex => `
+        <div class="glass-card p-3 rounded-2xl border border-slate-800 flex items-center justify-between space-x-3">
+          <div class="flex-1">
+            <h4 class="text-xs font-bold text-white">${ex.name}</h4>
+            <p class="text-[10px] text-slate-400 mt-0.5">${ex.cues}</p>
+          </div>
+          <button onclick="openVideoModal('${ex.name}', '${ex.videoId}', '${ex.cues}')" class="px-3 py-2 bg-indigo-600/20 hover:bg-indigo-600/30 border border-indigo-500/30 text-indigo-300 font-bold text-xs rounded-xl flex items-center space-x-1.5 transition">
+            <i class="fa-solid fa-play text-[10px]"></i>
+            <span>Watch</span>
+          </button>
+        </div>
+      `).join('');
+    }
+
+    function filterExerciseLibrary() {
+      const q = document.getElementById('exerciseSearchInput').value.toLowerCase();
+      document.querySelectorAll('#exerciseLibraryList > div').forEach(el => {
+        const text = el.innerText.toLowerCase();
+        el.style.display = text.includes(q) ? 'flex' : 'none';
+      });
+    }
+
+    function openVideoModal(title, videoId, cues) {
+      document.getElementById('modalVideoTitle').innerText = title;
+      document.getElementById('modalVideoCues').innerText = cues;
+      document.getElementById('videoIframe').src = `https://www.youtube.com/embed/${videoId}?enablejsapi=1&rel=0`;
+      document.getElementById('modalExternalYT').href = `https://www.youtube.com/results?search_query=Hussein+Farhat+${encodeURIComponent(title)}`;
+      document.getElementById('videoModal').classList.remove('hidden');
+    }
+
+    function closeVideoModal() {
+      document.getElementById('videoModal').classList.add('hidden');
+      document.getElementById('videoIframe').src = "";
+    }
+
+
+    // -------------------------------------------------------------
+    // 6. REST TIMER MODAL & ENGINE
+    // -------------------------------------------------------------
+    function openRestTimerModal() {
+      document.getElementById('restTimerModal').classList.remove('hidden');
+    }
+
+    function closeRestTimerModal() {
+      document.getElementById('restTimerModal').classList.add('hidden');
+    }
+
+    function setRestTimer(sec) {
+      restTimerTime = sec;
+      updateRestTimerDisplay();
+    }
+
+    function updateRestTimerDisplay() {
+      const m = Math.floor(restTimerTime / 60);
+      const s = restTimerTime % 60;
+      document.getElementById('restTimerDisplay').innerText = `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+    }
+
+    function toggleRestTimer() {
+      const btn = document.getElementById('restTimerBtn');
+      if (isRestTimerRunning) {
+        clearInterval(restTimerInterval);
+        isRestTimerRunning = false;
+        btn.innerText = "Start Timer";
+        btn.classList.replace('bg-rose-600', 'bg-indigo-600');
+      } else {
+        isRestTimerRunning = true;
+        btn.innerText = "Pause";
+        btn.classList.replace('bg-indigo-600', 'bg-rose-600');
+        restTimerInterval = setInterval(() => {
+          if (restTimerTime > 0) {
+            restTimerTime--;
+            updateRestTimerDisplay();
+          } else {
+            clearInterval(restTimerInterval);
+            isRestTimerRunning = false;
+            btn.innerText = "Start Timer";
+            btn.classList.replace('bg-rose-600', 'bg-indigo-600');
+            alert("Rest Time Up! Get back to the set.");
+          }
+        }, 1000);
+      }
+    }
+
+    function resetRestTimer() {
+      clearInterval(restTimerInterval);
+      isRestTimerRunning = false;
+      restTimerTime = 90;
+      updateRestTimerDisplay();
+      const btn = document.getElementById('restTimerBtn');
+      btn.innerText = "Start Timer";
+      btn.classList.replace('bg-rose-600', 'bg-indigo-600');
+    }
+
+
+    // -------------------------------------------------------------
+    // 7. LIFTING UTILITIES (1RM & IMPERIAL PLATE LOADER)
+    // -------------------------------------------------------------
+    function calculate1RM() {
+      const w = parseFloat(document.getElementById('rmWeight').value) || 0;
+      const r = parseFloat(document.getElementById('rmReps').value) || 0;
+      if (w <= 0 || r <= 0) return;
+
+      const rm = Math.round(w * (1 + r / 30));
+      document.getElementById('rmVal').innerText = `${rm} lbs`;
+      document.getElementById('rmResult').classList.remove('hidden');
+    }
+
+    function calculatePlates() {
+      const target = parseFloat(document.getElementById('plateTargetWeight').value) || 45;
+      const display = document.getElementById('platesDisplay');
+      
+      const bar = 45;
+      if (target < bar) {
+        display.innerHTML = `<span class="text-xs text-rose-400">Target must be at least barbell weight (45 lbs)</span>`;
+        return;
+      }
+
+      let perSide = (target - bar) / 2;
+      const plates = [45, 35, 25, 10, 5, 2.5];
+      const result = [];
+
+      plates.forEach(p => {
+        while (perSide >= p) {
+          result.push(p);
+          perSide -= p;
+        }
+      });
+
+      if (result.length === 0) {
+        display.innerHTML = `<span class="text-xs text-slate-400">Empty Barbell (45 lbs)</span>`;
